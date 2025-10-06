@@ -84,6 +84,30 @@ pipeline {
             }
         }
 
+		stage('Package') {
+			steps {
+				sh "mvn package -DskipTests"
+			}
+		}
+
+		stage('Docker Build') {
+			steps {
+				script {
+					dockerImage = docker.build("keerthana544/hello-world-nodejs:${env.BUILD_TAG}")
+				}
+			}
+		}
+
+		stage('Push Docker Image') {
+			steps {
+				script {
+					docker.withRegistry('', 'dockerhub'){
+					dockerImage.push();
+					dockerImage.push('lastest')
+					}
+				}
+			}
+		}
         stage('Post Build') {
             steps {
                 echo "Build completed successfully ✅"
