@@ -31,9 +31,9 @@ pipeline {
 				echo "BUILD_URL - $env.BUILD_URL"
 			}
 		}
-		stage('complie') {
+		stage('compile') {
 			steps {
-				sh "mvn clean complie"
+				sh "mvn clean compile"
 			}
 		}
 		stage('Test') {
