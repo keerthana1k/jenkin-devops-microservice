@@ -9,7 +9,7 @@
 
 //DESLARATIVE
 pipeline {
-	//agent any
+	agent any
 	//agent { docker { image 'maven:3.9.11'}}
 	//agent { docker { image 'node:24.9.0'}}
 	stages {
