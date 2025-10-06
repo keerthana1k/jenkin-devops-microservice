@@ -33,7 +33,7 @@ pipeline {
 		}
 		stage('compile') {
 			steps {
-				sh "mvn clean compile -DskipTests"
+				sh 'mvn clean install -DskipTests'
 			}
 		}
 		stage('Test') {
