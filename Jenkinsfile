@@ -8,56 +8,98 @@
 
 
 //DESLARATIVE
+// pipeline {
+// 	agent any
+// 	//agent { docker { image 'maven:3.9.11'}}
+// 	//agent { docker { image 'node:24.9.0'}}
+// 	environment {
+// 		dockerHome = tool 'myDocker'
+// 		mavenHome = tool 'myMaven'
+// 		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+// 	}
+// 	stages {
+// 		stage('Checkout') {
+// 			steps {
+// 				sh "mvn --version"
+// 				sh 'docker version'
+// 				echo "Build"
+// 				echo "$PATH"
+// 				echo "BUILD_NUMBER - $env.BUILD_NUMBER"
+// 				echo "BUILD_ID - $env.BUILD_ID"
+// 				echo "JOB_NAME - $env.JOB_NAME"
+// 				echo "BUILD_TAG - $env.BUILD_TAG"
+// 				echo "BUILD_URL - $env.BUILD_URL"
+// 			}
+// 		}
+// 		stage('compile') {
+// 			steps {
+// 				sh 'mvn clean install -DskipTests'
+// 			}
+// 		}
+// 		stage('Test') {
+// 			steps {
+// 				sh "mvn test"
+// 			}
+// 		}
+// 		stage('Integration Test') {
+// 			steps {
+// 				echo "mvn failsafe:integration-test failsafe:verify"
+// 			}
+// 		}
+// 	} 
+// 	post {
+// 		always {
+// 			echo 'I, awesome. I run always'
+// 		}
+// 		success {
+// 			echo 'I run when you are successful'
+// 		}
+// 		failure {
+// 			echo 'I run when you are Fail'
+// 		}
+// 		//unstable
+// 		//changed
+// 	}
+// }
 pipeline {
-	agent any
-	//agent { docker { image 'maven:3.9.11'}}
-	//agent { docker { image 'node:24.9.0'}}
-	environment {
-		dockerHome = tool 'myDocker'
-		mavenHome = tool 'myMaven'
-		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
-	}
-	stages {
-		stage('Checkout') {
-			steps {
-				sh "mvn --version"
-				sh 'docker version'
-				echo "Build"
-				echo "$PATH"
-				echo "BUILD_NUMBER - $env.BUILD_NUMBER"
-				echo "BUILD_ID - $env.BUILD_ID"
-				echo "JOB_NAME - $env.JOB_NAME"
-				echo "BUILD_TAG - $env.BUILD_TAG"
-				echo "BUILD_URL - $env.BUILD_URL"
-			}
-		}
-		stage('compile') {
-			steps {
-				sh 'mvn clean install -DskipTests'
-			}
-		}
-		stage('Test') {
-			steps {
-				sh "mvn test"
-			}
-		}
-		stage('Integration Test') {
-			steps {
-				echo "mvn failsafe:integration-test failsafe:verify"
-			}
-		}
-	} 
-	post {
-		always {
-			echo 'I, awesome. I run always'
-		}
-		success {
-			echo 'I run when you are successful'
-		}
-		failure {
-			echo 'I run when you are Fail'
-		}
-		//unstable
-		//changed
-	}
+    agent any
+
+    environment {
+        mavenHome = tool 'myMaven'
+        PATH = "$mavenHome/bin:$PATH"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Checking out code..."
+                sh "mvn --version"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Building project without running tests..."
+                sh "mvn clean package -Dmaven.test.skip=true"
+            }
+        }
+
+        stage('Post Build') {
+            steps {
+                echo "Build completed successfully ✅"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline finished (success or fail)."
+        }
+        success {
+            echo "✅ Build successful!"
+        }
+        failure {
+            echo "❌ Build failed!"
+        }
+    }
 }
