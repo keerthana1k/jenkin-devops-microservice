@@ -10,11 +10,13 @@
 //DESLARATIVE
 pipeline {
 	//agent any
-	agent { docker { image 'maven:3.9.11'}}
+	//agent { docker { image 'maven:3.9.11'}}
+	agent { docker { image 'node:24.9.0'}}
 	stages {
 		stage('Build') {
 			steps {
-				sh "mvn --version"
+				//sh "mvn --version"
+				sh 'node --version'
 				echo "Build"
 			}
 		}
